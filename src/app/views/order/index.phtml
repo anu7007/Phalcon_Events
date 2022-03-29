@@ -1,0 +1,17 @@
+index page of order controller
+<br>
+<?php
+echo $this->tag->linkTo(
+    '/order/add',
+    'Add Order'
+);
+echo PHP_EOL.'<br>';
+echo $this->tag->linkTo(
+    '/order/list',
+    'List Orders'
+);
+echo "<h3>";
+echo $this->tag->linkTo(
+    '/',
+    'Go To Index!'
+);

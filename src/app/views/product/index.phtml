@@ -1,0 +1,17 @@
+index page of product controller
+<br>
+<?php
+echo $this->tag->linkTo(
+    '/product/add',
+    'Add Product'
+);
+echo PHP_EOL.'<br>';
+echo $this->tag->linkTo(
+    '/product/list',
+    'List Product'
+);
+echo "<h3>";
+echo $this->tag->linkTo(
+    '/',
+    'Go To Index!'
+);
