@@ -44,6 +44,7 @@ class OrderController extends Controller
                         ]
                     );
                     $success = $orders->save();
+                    $this->view->success = $success;
                 }
                 if ($success) {
                     $this->view->ordermsg = "*Product added Successfully!!";

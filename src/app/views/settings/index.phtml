@@ -32,7 +32,7 @@ echo $this->tag->linkTo(
     <?php echo $this->tag->textField("default_zipcode"); ?>
 </p>
 
-<span class="text text-danger">
+<span class="text text-<?php echo $success===true?'success':'danger';?>">
     <?php echo $settingsmsg; ?>
 </span>
 <p>

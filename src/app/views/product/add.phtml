@@ -27,7 +27,7 @@ echo $this->tag->linkTo(
         <label for="email">Stock</label>
         <?php echo $this->tag->textField("stock"); ?>
     </p>
-    <span class="text text-danger">
+    <span class="text text-<?php echo $success===true?'success':'danger';?>">
        <?php echo $msg; ?>
     </span>
     <p>

@@ -35,11 +35,9 @@ echo $this->tag->linkTo(
     <?php echo $this->tag->textField("quantity"); ?>
 </p>
 
-<span class="text text-danger">
+<span class="text text-<?php echo $success===true?'success':'danger';?>">
     <?php echo $ordermsg; ?>
-    <!-- <?php foreach ($newpostdata as $k) {
-        print_r(json_encode($k));
-    } ?> -->
+  
 
 </span>
 <p>

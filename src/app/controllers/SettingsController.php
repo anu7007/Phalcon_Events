@@ -34,7 +34,8 @@ class SettingsController extends Controller
                         $k->default_price = $postdata['default_price'];
                         $k->default_stock = $postdata['default_stock'];
                         $k->default_zipcode = $postdata['default_zipcode'];
-                        $k->save();
+                        $success = $k->save();
+                        $this->view->success = $success;
                         $this->view->settingsmsg = "*Settings Saved Successfully!!";
                     }
                 }

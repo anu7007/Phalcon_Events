@@ -46,6 +46,7 @@ class ProductController extends Controller
                     $success = $products->save();
                     // print_r($products->getMessages());
                     // die;
+                    $this->view->success = $success;
                 }
                 if ($success) {
                     $this->view->msg = "*Product added Successfully!!";
