@@ -1,0 +1,30 @@
+<style>
+    body{
+        width: 60%;
+        margin: 5% 10% 10% 20%;
+    }
+    </style>
+<div class="container mt-5">
+<form class="form form-control" method="post" action="">
+  <div class="form-outline mb-4">
+      <label class="form-label">Role:</label>
+    <input type="text" id="" class="form-control" name="role" placeholder="Enter new Role"/>
+    <span class="text text-<? echo $success == true ? 'success':'danger';?>">
+  <?php echo $msg;?>
+</span>
+  </div>
+
+
+  <!-- Submit button -->
+  <input type="submit" class="btn btn-primary btn-block" value="Add Role"></input>
+</form>
+</div>
+<div>
+  <?php
+  if($roles){
+  foreach($roles as $k){
+    echo $k;
+  }
+}
+  ?>
+</div>

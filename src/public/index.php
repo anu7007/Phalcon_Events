@@ -48,6 +48,10 @@ $eventManager->attach(
     'notifications',
     new notificationListeners()
 );
+// $eventManager ->attach(
+//     'application:beforeHandleRequest',
+//     new notificationListeners()
+// );
 
 $container = new FactoryDefault();
 
