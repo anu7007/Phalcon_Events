@@ -30,6 +30,11 @@ class OrderController extends Controller
             ) {
                 $this->view->ordermsg = "*Please fill all fields";
             } else {
+                $success = $orders->save();
+                if ($success) {
+                    $this->view->success = $success;
+                    $this->view->ordermsg = "*Order added Successfully!!";
+                }
                 if ($postdata['zipcode'] == '') {
                     $eventmanager = $this->di->get('eventManager');
                     $newpostdata = $eventmanager->fire('notifications:afterSend', $this, $postdata);
@@ -44,10 +49,10 @@ class OrderController extends Controller
                         ]
                     );
                     $success = $orders->save();
-                    $this->view->success = $success;
-                }
-                if ($success) {
-                    $this->view->ordermsg = "*Product added Successfully!!";
+                    if ($success) {
+                        $this->view->ordermsg = "*Order added Successfully!!";
+                        $this->view->success = $success;
+                    }
                 }
             }
         }

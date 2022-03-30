@@ -30,6 +30,11 @@ class ProductController extends Controller
             ) {
                 $this->view->msg = "*Product Name or Description or Tags cannot be empty!!";
             } else {
+                $success = $products->save();
+                if ($success) {
+                    $this->view->success = $success;
+                    $this->view->msg = "*Order added Successfully!!";
+                }
                 if (empty($postdata['price']) && empty($postdata['stock'])) {
                     $eventmanager = $this->di->get('eventManager');
                     $newpostdata = $eventmanager->fire('notifications:beforeSend', $this, $postdata);
@@ -47,9 +52,9 @@ class ProductController extends Controller
                     // print_r($products->getMessages());
                     // die;
                     $this->view->success = $success;
-                }
-                if ($success) {
-                    $this->view->msg = "*Product added Successfully!!";
+                    if ($success) {
+                        $this->view->msg = "*Product added Successfully!!";
+                    }
                 }
             }
             // $success = $products->save();
