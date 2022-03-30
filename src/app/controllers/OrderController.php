@@ -15,7 +15,7 @@ class OrderController extends Controller
         if ($this->request->ispost()) {
             $postdata = $this->request->getPost();
             $orders->assign(
-                $this->request->getPost(),
+                $postdata,
                 [
                     'customer_name',
                     'customer_address',

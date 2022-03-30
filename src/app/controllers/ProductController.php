@@ -13,9 +13,10 @@ class ProductController extends Controller
     public function addAction()
     {
         $products = new Products();
-        if ($this->request->getpost()) {
+        if ($this->request->isPost()) {
+            $postdata = $this->request->getPost();
             $products->assign(
-                $postdata = $this->request->getPost(),
+                $postdata,
                 [
                     'product_name',
                     'product_description',
@@ -25,13 +26,30 @@ class ProductController extends Controller
                 ]
             );
             if (
-                empty($postdata['product_name']) || empty($postdata['product_description']) || empty($postdata['tags']) ||
-                empty($postdata['price']) || empty($postdata['stock'])
+                empty($postdata['product_name']) || empty($postdata['product_description']) || empty($postdata['tags'])
             ) {
-                $this->view->msg = "*Please fill all fields";
+                $this->view->msg = "*Product Name or Description or Tags cannot be empty!!";
             } else {
-                $products->save();
-                $this->view->msg = "*Product added Successfully!!";
+                if (empty($postdata['price']) && empty($postdata['stock'])) {
+                    $eventmanager = $this->di->get('eventManager');
+                    $newpostdata = $eventmanager->fire('notifications:beforeSend', $this, $postdata);
+                    $products->assign(
+                        $newpostdata,
+                        [
+                            'product_name',
+                            'product_description',
+                            'tags',
+                            'price',
+                            'stock'
+                        ]
+                    );
+                    $success = $products->save();
+                    // print_r($products->getMessages());
+                    // die;
+                }
+                if ($success) {
+                    $this->view->msg = "*Product added Successfully!!";
+                }
             }
             // $success = $products->save();
         }
