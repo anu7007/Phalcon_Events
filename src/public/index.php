@@ -1,4 +1,5 @@
 <?php
+
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
@@ -11,6 +12,7 @@ use Phalcon\Http\Response\Cookies;
 use Phalcon\Session\Adapter\Stream;
 use Phalcon\Events\Event;
 use Phalcon\Events\Manager as EventsManager;
+
 $config = new Config([]);
 
 // Define some absolute path constants to aid in locating resources
@@ -32,6 +34,7 @@ $loader->registerDirs(
     [
         APP_PATH . "/controllers/",
         APP_PATH . "/models/",
+        APP_PATH . "/listeners/",
     ]
 );
 $loader->registerNamespaces([
@@ -40,16 +43,20 @@ $loader->registerNamespaces([
 
 $loader->register();
 
-$container = new FactoryDefault();
 $eventManager = new EventsManager();
 $eventManager->attach(
     'notifications',
-    new App\Listeners\notificationListeners()
+    new notificationListeners()
 );
+
+$container = new FactoryDefault();
 
 $container->set(
     'eventManager',
-    $eventManager
+    function () use($eventManager) {
+
+        return $eventManager;
+    }
 );
 $container->set(
     'view',

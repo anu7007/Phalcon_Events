@@ -25,7 +25,7 @@ echo $this->tag->linkTo(
         [
             'product_id',
             $products,
-            'using' => ['product_id', 'product_name']
+            'using' => ['product_name', 'product_name']
 
         ]
     ); ?>
@@ -37,6 +37,10 @@ echo $this->tag->linkTo(
 
 <span class="text text-danger">
     <?php echo $ordermsg; ?>
+    <!-- <?php foreach ($newpostdata as $k) {
+        print_r(json_encode($k));
+    } ?> -->
+
 </span>
 <p>
     <?php echo $this->tag->submitButton("Place Order"); ?>
