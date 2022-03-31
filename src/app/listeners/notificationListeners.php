@@ -1,5 +1,5 @@
 <?php
-// namespace App\Listeners;
+namespace App\Listeners;
 use Phalcon\Events\Event;
 
 class notificationListeners
@@ -32,5 +32,24 @@ class notificationListeners
         }
     
         return $postdata;
+    }
+    public function beforeHandleRequest(Event $event, \Phalcon\Mvc\Application $application)
+    {
+        $aclFile = APP_PATH . '/security/acl.cache';
+        if (true == is_file($aclFile)) {
+            $acl = unserialize(
+                file_get_contents($aclFile)
+            );
+
+            $role = $application->request->get('role');
+            $controller = $application->router->getControllerName();
+            $action = $application->router->getActionName();
+            if (!$role || true !== $acl->isAllowed($role, $controller, $action)) {
+                echo "Access denied :(";
+                die();
+            } else {
+                // echo "we don't find any acl list try after somtiome";
+            }
+        }
     }
 }

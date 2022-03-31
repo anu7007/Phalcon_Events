@@ -5,7 +5,7 @@ use Phalcon\Mvc\Controller;
 
 class OrderController extends Controller
 {
-    public function IndexAction()
+    public function indexAction()
     {
     }
     public function addAction()

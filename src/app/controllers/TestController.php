@@ -4,7 +4,7 @@ use Phalcon\Mvc\Controller;
 
 class TestController extends Controller
 {
-    public function EventTestAction()
+    public function eventTestAction()
     {
         echo "hii";
     }

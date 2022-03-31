@@ -5,7 +5,7 @@ use Phalcon\Mvc\Controller;
 
 class SettingsController extends Controller
 {
-    public function IndexAction()
+    public function indexAction()
     {
         $settings = new Settings();
         $this->view->settings = Settings::find();

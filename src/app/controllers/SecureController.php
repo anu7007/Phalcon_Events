@@ -12,47 +12,17 @@ class SecureController extends Controller
         $aclFile = APP_PATH . '/security/acl.cache';
         if (true !== is_file($aclFile)) {
             $acl = new Memory();
-            // print_r(json_encode($acl));
-
-            $acl->addRole('admin');
-            $acl->addRole('user');
-            // $acl->addRole('manager');
-            $acl->addComponent(
-                'test',
-                [
-                    'eventtest'
-                ]
-            );
-            $acl->addComponent(
-                'index',
-                [
-                    'index'
-                ]
-            );
-            $acl->addComponent(
-                'order',
-                [
-                    'index',
-                    'add',
-                    'list'
-                ]
-            );
-            $acl->addComponent(
-                'product',
-                [
-                    'index',
-                    'add',
-                    'list'
-                ]
-            );
-            $acl->addComponent(
-                'settings',
-                [
-                    'index'
-                ]
-            );
-            $acl->allow('admin', 'test', 'eventtest');
-            $acl->deny('user', '*', '*');
+            $ACL = Acl::find();
+            foreach($ACL as $k=>$v){
+                $acl->addRole($v->role);
+                $acl->addComponent(
+                        $v->selectController,
+                        [
+                            $v->selectAction
+                        ]
+                    );
+                    $acl->allow($v->role,  $v->selectController, $v->selectAction);
+            }
             file_put_contents($aclFile, serialize($acl));
         } else {
             $acl = unserialize(file_get_contents($aclFile));
@@ -84,8 +54,8 @@ class SecureController extends Controller
 
                         ]
                     );
-                    $ACL->controller = null;
-                    $ACL->action = null;
+                    $ACL->controller = 'x';
+                    $ACL->action = 'x';
                     $success = $ACL->save();
                     $acl->addRole(new Role($postdata['role']));
                     file_put_contents($aclFile, serialize($acl));
@@ -103,12 +73,14 @@ class SecureController extends Controller
     public function addcomponentAction()
     {
         // return 'add component';
-        $this->view->roles = Acl::find();
+        // $this->view->roles = Acl::find();
+
         $aclFile = APP_PATH . '/security/acl.cache';
         if (true !== is_file($aclFile)) {
             $acl = new Memory();
         } else {
             $acl = unserialize(file_get_contents($aclFile));
+            $this->view->roles = $acl->getRoles() ?? [];
             // $this->view->roles = $acl->getComponents() ?? [];
             //die(print_r($acl->getRoles()));
             // $this->view->roles = $acl->getRoles() ?? [];
@@ -127,12 +99,12 @@ class SecureController extends Controller
 
                         ]
                     );
-                   
+
                     $success = $ACL->save();
                     $acl->addComponent(
                         $postdata["controller"],
                         [
-                            $postdata["action"]    
+                            $postdata["action"]
                         ]
                     );
                     file_put_contents($aclFile, serialize($acl));
@@ -147,4 +119,51 @@ class SecureController extends Controller
             }
         }
     }
+    public function allowcomponentAction()
+    {
+        $aclFile = APP_PATH . '/security/acl.cache';
+        if (true !== is_file($aclFile)) {
+            $acl = new Memory();
+        } else {
+            $acl = unserialize(file_get_contents($aclFile));
+            $this->view->roles = $acl->getRoles() ?? [];
+            $this->view->components = $acl->getComponents() ?? [];
+
+            // $this->view->actions = $acl->getActions() ?? [];
+            if ($this->request->isPost()) {
+                $postdata = $this->request->getpost();
+                // $cntrls = $this->request->getpost();
+                // $this->view->postdata = $postdata;
+                if ($this->request->isPost()) {
+                    $postdata = $this->request->getpost();
+                    // foreach($postdata as $k){
+                        // echo $k;
+    
+                    // }
+                    // die(print_r($postdata));
+                    if($postdata['role'] == '0' || $postdata['selectController'] == '0' || $postdata['selectAction'] == '0' ) {
+                        $this->view->error = '*Please enter all fields!!';
+                    } else {
+                        $ACL = new Acl();
+                        $ACL->assign(
+                            $postdata,
+                            [
+                                'role',
+                                'selectController',
+                                'selectAction'
+    
+                            ]
+                        );
+    
+                        $success = $ACL->save();
+                        if ($success) {
+                            $this->view->error = '*Permissions Granted !!';
+                            $this->view->success = $success;
+                        } else {
+                            $this->view->error = '*Couldn\'t Grant Permissions!!';
+                        }
+            }
+        }
+
+            }}}
 }

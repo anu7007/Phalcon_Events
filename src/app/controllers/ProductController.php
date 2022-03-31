@@ -6,7 +6,7 @@ use Phalcon\Mvc\Controller;
 class ProductController extends Controller
 {
 
-    public function IndexAction()
+    public function indexAction()
     {
     }
 

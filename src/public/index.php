@@ -38,30 +38,13 @@ $loader->registerDirs(
     ]
 );
 $loader->registerNamespaces([
-    'App\Components' => APP_PATH . '/components',
+    'App\Listeners' => APP_PATH . '/listeners',
 ]);
 
 $loader->register();
 
-$eventManager = new EventsManager();
-$eventManager->attach(
-    'notifications',
-    new notificationListeners()
-);
-// $eventManager ->attach(
-//     'application:beforeHandleRequest',
-//     new notificationListeners()
-// );
-
 $container = new FactoryDefault();
 
-$container->set(
-    'eventManager',
-    function () use($eventManager) {
-
-        return $eventManager;
-    }
-);
 $container->set(
     'view',
     function () {
@@ -110,8 +93,6 @@ $container->set(
 
 $application = new Application($container);
 
-
-
 $container->set(
     'db',
     function () {
@@ -127,15 +108,37 @@ $container->set(
     }
 );
 
-$container->set(
-    'mongo',
-    function () {
-        $mongo = new MongoClient();
-
-        return $mongo->selectDB('db');
-    },
-    true
+$application = new Application($container);
+$eventManager = new EventsManager();
+$eventManager->attach(
+    'notifications',
+    new App\Listeners\notificationListeners()
 );
+$eventManager ->attach(
+    'application:beforeHandleRequest',
+    new App\Listeners\notificationListeners()
+);
+
+$container->set(
+    'eventManager',
+    $eventManager
+    // function () use($eventManager) {
+
+    //     return $eventManager;
+    // }
+);
+$application->seteventsManager($eventManager);
+
+
+// $container->set(
+//     'mongo',
+//     function () {
+//         $mongo = new MongoClient();
+
+//         return $mongo->selectDB('db');
+//     },
+//     true
+// );
 
 try {
     // Handle the request

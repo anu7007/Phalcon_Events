@@ -27,9 +27,9 @@ echo $this->tag->linkTo(
     <label for="email">Add Actions</label>
     <?php echo $this->tag->textField("action"); ?>
 </p>
-
-<span class="text text-<?php echo $success === true ? 'success' : 'danger'; ?>">
-    <?php echo $message; ?>
+<?php if($message){?>
+<span class="alert alert-<?php echo $success === true ? 'success' : 'danger'; ?>">
+    <?php echo $message.'<br>'; } ?>
 
 
 
