@@ -6,5 +6,6 @@ class TestController extends Controller
 {
     public function EventTestAction()
     {
+        echo "hii";
     }
 }
