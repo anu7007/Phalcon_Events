@@ -128,40 +128,35 @@ class SecureController extends Controller
             $acl = unserialize(file_get_contents($aclFile));
             $this->view->roles = $acl->getRoles() ?? [];
             $this->view->components = $acl->getComponents() ?? [];
-
-            // $this->view->actions = $acl->getActions() ?? [];
             if ($this->request->isPost()) {
                 $postdata = $this->request->getpost();
-                // $cntrls = $this->request->getpost();
-                // $this->view->postdata = $postdata;
-                if ($this->request->isPost()) {
-                    $postdata = $this->request->getpost();
-                    // foreach($postdata as $k){
-                    // echo $k;
+                if ($postdata['role'] == '0' || $postdata['selectController'] == '0' || $postdata['selectAction'] == '0') {
+                    $this->view->error = '*Please enter all fields!!';
+                } else {
+                    $ACL = new Acl();
+                    $ACL->assign(
+                        $postdata,
+                        [
+                            'role',
+                            'selectController',
+                            'selectAction'
 
-                    // }
-                    // die(print_r($postdata));
-                    if ($postdata['role'] == '0' || $postdata['selectController'] == '0' || $postdata['selectAction'] == '0') {
-                        $this->view->error = '*Please enter all fields!!';
+                        ]
+                    );
+
+                    $success = $ACL->save();
+                    $acl->addComponent(
+                        $postdata["selectController"],
+                        [
+                            $postdata["selectAction"]
+                        ]
+                    );
+                    file_put_contents($aclFile, serialize($acl));
+                    if ($success) {
+                        $this->view->error = '*Permissions Granted !!';
+                        $this->view->success = $success;
                     } else {
-                        $ACL = new Acl();
-                        $ACL->assign(
-                            $postdata,
-                            [
-                                'role',
-                                'selectController',
-                                'selectAction'
-
-                            ]
-                        );
-
-                        $success = $ACL->save();
-                        if ($success) {
-                            $this->view->error = '*Permissions Granted !!';
-                            $this->view->success = $success;
-                        } else {
-                            $this->view->error = '*Couldn\'t Grant Permissions!!';
-                        }
+                        $this->view->error = '*Couldn\'t Grant Permissions!!';
                     }
                 }
             }
