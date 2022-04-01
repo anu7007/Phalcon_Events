@@ -13,15 +13,15 @@ class SecureController extends Controller
         if (true !== is_file($aclFile)) {
             $acl = new Memory();
             $ACL = Acl::find();
-            foreach($ACL as $k=>$v){
+            foreach ($ACL as $k => $v) {
                 $acl->addRole($v->role);
                 $acl->addComponent(
-                        $v->selectController,
-                        [
-                            $v->selectAction
-                        ]
-                    );
-                    $acl->allow($v->role,  $v->selectController, $v->selectAction);
+                    $v->selectController,
+                    [
+                        $v->selectAction
+                    ]
+                );
+                $acl->allow($v->role,  $v->selectController, $v->selectAction);
             }
             file_put_contents($aclFile, serialize($acl));
         } else {
@@ -137,11 +137,11 @@ class SecureController extends Controller
                 if ($this->request->isPost()) {
                     $postdata = $this->request->getpost();
                     // foreach($postdata as $k){
-                        // echo $k;
-    
+                    // echo $k;
+
                     // }
                     // die(print_r($postdata));
-                    if($postdata['role'] == '0' || $postdata['selectController'] == '0' || $postdata['selectAction'] == '0' ) {
+                    if ($postdata['role'] == '0' || $postdata['selectController'] == '0' || $postdata['selectAction'] == '0') {
                         $this->view->error = '*Please enter all fields!!';
                     } else {
                         $ACL = new Acl();
@@ -151,10 +151,10 @@ class SecureController extends Controller
                                 'role',
                                 'selectController',
                                 'selectAction'
-    
+
                             ]
                         );
-    
+
                         $success = $ACL->save();
                         if ($success) {
                             $this->view->error = '*Permissions Granted !!';
@@ -162,8 +162,9 @@ class SecureController extends Controller
                         } else {
                             $this->view->error = '*Couldn\'t Grant Permissions!!';
                         }
+                    }
+                }
             }
         }
-
-            }}}
+    }
 }
